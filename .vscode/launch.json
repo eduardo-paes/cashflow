@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch API",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/src",
+            "env": {},
+            "args": [
+                "main.go"
+            ],
+            "showLog": true,
+            "trace": "log",
+            "dlvToolPath": "${env.GOPATH}/bin/dlv"
+        }
+    ]
+}
