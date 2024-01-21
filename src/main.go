@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/eduardo-paes/cashflow/infra/data"
+	"github.com/eduardo-paes/cashflow/infra/http/middleware"
 	"github.com/eduardo-paes/cashflow/infra/http/routes"
 	"github.com/eduardo-paes/cashflow/infra/ioc"
 	"github.com/gin-gonic/gin"
@@ -24,10 +25,23 @@ func init() {
 // @title CashFlow API
 // @version 1.0
 // @description API for managing expenses in CashFlow application.
+// @termsOfService  https://todefine.com
+
+// @contact.name   Eduardo Paes
+// @contact.url    https://twitter.com/edpaes
+// @contact.email  eduardo-paes@outlook.com
+
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+
 // @host localhost:3008
 // @basePath /api/v1
 // @schemes http
-// @BasePath /api/v1
+// @security BasicAuth
+// @security BearerToken
+// @securityDefinitions.apiKey JWT
+// @in header
+// @name token
 func main() {
 	// Openning database connection
 	conn, dbErr := data.GetConnection()
@@ -58,9 +72,14 @@ func main() {
 		ctx.JSON(http.StatusOK, "CashFlow Restful API, v1")
 	})
 
-	// Injecting core services
-	expenseController := ioc.ConfigExpenseDI(conn)
-	endpoints := routes.ConfigureExpenseRoutes(router, expenseController)
+	// Authenticated routes
+	authGroup := router.Group("/api/v1")
+	authGroup.Use(middleware.AuthMiddleware())
+	{
+		// Injecting core services
+		expenseController := ioc.ConfigExpenseDI(conn)
+		routes.ConfigureExpenseRoutes(authGroup, expenseController)
+	}
 
 	// Serving API
 	port := viper.GetString("server.port")
@@ -68,7 +87,7 @@ func main() {
 	log.Printf("You can access the Swagger via: http://localhost:%v/swagger/index.html", port)
 	server := &http.Server{
 		Addr:    ":" + port,
-		Handler: endpoints,
+		Handler: router,
 	}
 	err := server.ListenAndServe()
 	if err != nil {

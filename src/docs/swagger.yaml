@@ -34,8 +34,15 @@ definitions:
     type: object
 host: localhost:3008
 info:
-  contact: {}
+  contact:
+    email: eduardo-paes@outlook.com
+    name: Eduardo Paes
+    url: https://twitter.com/edpaes
   description: API for managing expenses in CashFlow application.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://todefine.com
   title: CashFlow API
   version: "1.0"
 paths:
@@ -176,4 +183,12 @@ paths:
       summary: Swagger UI endpoint
 schemes:
 - http
+security:
+- BasicAuth: []
+- BearerToken: []
+securityDefinitions:
+  JWT:
+    in: header
+    name: token
+    type: apiKey
 swagger: "2.0"

@@ -9,9 +9,8 @@ import (
 )
 
 // ConfigureExpenseRoutes configures routes related to expenses
-func ConfigureExpenseRoutes(router *gin.Engine, expenseController core.ExpenseService) *gin.Engine {
+func ConfigureExpenseRoutes(baseRoute *gin.RouterGroup, expenseController core.ExpenseService) {
 	// Use the Gin router group for /expense
-	baseRoute := router.Group("/api/v1")
 	expenseGroup := baseRoute.Group("/expense")
 
 	// POST /expense
@@ -45,6 +44,4 @@ func ConfigureExpenseRoutes(router *gin.Engine, expenseController core.ExpenseSe
 
 		expenseController.Update(c.Writer, c.Request)
 	})
-
-	return router
 }

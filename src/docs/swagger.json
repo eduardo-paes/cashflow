@@ -6,7 +6,16 @@
     "info": {
         "description": "API for managing expenses in CashFlow application.",
         "title": "CashFlow API",
-        "contact": {},
+        "termsOfService": "https://todefine.com",
+        "contact": {
+            "name": "Eduardo Paes",
+            "url": "https://twitter.com/edpaes",
+            "email": "eduardo-paes@outlook.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "1.0"
     },
     "host": "localhost:3008",
@@ -267,5 +276,20 @@
                 }
             }
         }
-    }
+    },
+    "securityDefinitions": {
+        "JWT": {
+            "type": "apiKey",
+            "name": "token",
+            "in": "header"
+        }
+    },
+    "security": [
+        {
+            "BasicAuth": []
+        },
+        {
+            "BearerToken": []
+        }
+    ]
 }
