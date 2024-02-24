@@ -49,7 +49,7 @@ func main() {
 		log.Printf("Error opening DB connection: %v", dbErr)
 		return
 	}
-	
+
 	// Running migrations
 	mgErr := data.RunMigrations(conn)
 	if mgErr != nil {

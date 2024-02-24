@@ -26,10 +26,10 @@ func GetConnection() (*gorm.DB, error) {
 
 // RunMigrations run scripts on path database/migrations
 func RunMigrations(db *gorm.DB) error {
-    // Automatically create tables for all registered models
-    if err := db.AutoMigrate(&core.Expense{}); err != nil {
-        return err
-    }
+	// Automatically create tables for all registered models
+	if err := db.AutoMigrate(&core.Expense{}); err != nil {
+		return err
+	}
 
-    return nil
+	return nil
 }

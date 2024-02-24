@@ -1,295 +1,269 @@
 {
-    "schemes": [
-        "http"
-    ],
-    "swagger": "2.0",
-    "info": {
-        "description": "API for managing expenses in CashFlow application.",
-        "title": "CashFlow API",
-        "termsOfService": "https://todefine.com",
-        "contact": {
-            "name": "Eduardo Paes",
-            "url": "https://twitter.com/edpaes",
-            "email": "eduardo-paes@outlook.com"
-        },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-        },
-        "version": "1.0"
+  "schemes": ["http"],
+  "swagger": "2.0",
+  "info": {
+    "description": "API for managing expenses in CashFlow application.",
+    "title": "CashFlow API",
+    "termsOfService": "https://todefine.com",
+    "contact": {
+      "name": "Eduardo Paes",
+      "url": "https://twitter.com/edpaes",
+      "email": "eduardo-paes@outlook.com"
     },
-    "host": "localhost:3008",
-    "basePath": "/api/v1",
-    "paths": {
-        "/expense": {
-            "get": {
-                "description": "Get one or multiple expenses based on provided parameters",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "expenses"
-                ],
-                "summary": "Get one or multiple expenses",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Expense ID",
-                        "name": "id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Number of items to skip",
-                        "name": "skip",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Number of items to take",
-                        "name": "take",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/core.Expense"
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "description": "Create a new expense",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "expenses"
-                ],
-                "summary": "Create a new expense",
-                "parameters": [
-                    {
-                        "description": "Expense data",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ports.ExpenseInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/core.Expense"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/expense/{id}": {
-            "put": {
-                "description": "Update an expense by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "expenses"
-                ],
-                "summary": "Update an expense by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Expense ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "description": "Expense data",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ports.ExpenseInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/core.Expense"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "description": "Delete an expense by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "expenses"
-                ],
-                "summary": "Delete an expense by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Expense ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/core.Expense"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/swagger/{anything}": {
-            "get": {
-                "description": "Swagger UI endpoint",
-                "summary": "Swagger UI endpoint",
-                "responses": {}
-            }
-        }
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "definitions": {
-        "core.Expense": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "number"
-                },
-                "category": {
-                    "type": "string"
-                },
-                "createdAt": {
-                    "type": "string"
-                },
-                "date": {
-                    "type": "string"
-                },
-                "deletedAt": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "type": {
-                    "type": "integer"
-                }
+    "version": "1.0"
+  },
+  "host": "localhost:3008",
+  "basePath": "/api/v1",
+  "paths": {
+    "/expense": {
+      "get": {
+        "description": "Get one or multiple expenses based on provided parameters",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["expenses"],
+        "summary": "Get one or multiple expenses",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Expense ID",
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Number of items to skip",
+            "name": "skip",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Number of items to take",
+            "name": "take",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/core.Expense"
+              }
             }
-        },
-        "ports.ExpenseInput": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "number"
-                },
-                "category": {
-                    "type": "string"
-                },
-                "date": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "integer"
-                }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "string"
             }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "string"
+            }
+          }
         }
-    },
-    "securityDefinitions": {
-        "JWT": {
-            "type": "apiKey",
-            "name": "token",
-            "in": "header"
+      },
+      "post": {
+        "description": "Create a new expense",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["expenses"],
+        "summary": "Create a new expense",
+        "parameters": [
+          {
+            "description": "Expense data",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ports.ExpenseInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/core.Expense"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "string"
+            }
+          }
         }
+      }
     },
-    "security": [
-        {
-            "BasicAuth": []
+    "/expense/{id}": {
+      "put": {
+        "description": "Update an expense by ID",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["expenses"],
+        "summary": "Update an expense by ID",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Expense ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "Expense data",
+            "name": "request",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ports.ExpenseInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/core.Expense"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "Delete an expense by ID",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "tags": ["expenses"],
+        "summary": "Delete an expense by ID",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "Expense ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/core.Expense"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/swagger/{anything}": {
+      "get": {
+        "description": "Swagger UI endpoint",
+        "summary": "Swagger UI endpoint",
+        "responses": {}
+      }
+    }
+  },
+  "definitions": {
+    "core.Expense": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number"
         },
-        {
-            "BearerToken": []
+        "category": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "deletedAt": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer"
+        },
+        "type": {
+          "type": "integer"
         }
-    ]
+      }
+    },
+    "ports.ExpenseInput": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "category": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "name": "token",
+      "in": "header"
+    }
+  },
+  "security": [
+    {
+      "BasicAuth": []
+    },
+    {
+      "BearerToken": []
+    }
+  ]
 }

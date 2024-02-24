@@ -7,11 +7,11 @@ import (
 )
 
 type ExpenseInput struct {
-	Category		string		`json:"category"`
-	Type			int			`json:"type"`
-	Description		string		`json:"description"`
-	Amount      	float64		 `json:"amount"`
-	Date        	time.Time	`json:"date"`
+	Category    string    `json:"category"`
+	Type        int       `json:"type"`
+	Description string    `json:"description"`
+	Amount      float64   `json:"amount"`
+	Date        time.Time `json:"date"`
 }
 
 // Converts JSON body request to a CreateExpense struct

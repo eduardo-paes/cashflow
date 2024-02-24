@@ -40,13 +40,13 @@ func (u *UseCase) Delete(id int64) (*core.Expense, error) {
 
 // GetOneOrMany implements core.ExpenseUseCases.
 func (u *UseCase) GetOneOrMany(skip int, take int, id ...int64) ([]core.Expense, error) {
-    expenses, err := u.Repository.GetOneOrMany(skip, take, id...)
+	expenses, err := u.Repository.GetOneOrMany(skip, take, id...)
 
-    if err != nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 
-    return expenses, nil
+	return expenses, nil
 }
 
 // Update implements core.ExpenseUseCases.
