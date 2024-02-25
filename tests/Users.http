@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:3008/api/v1
+@authToken = YOUR_AUTH_TOKEN_HERE
+
+
+### User Creation
+POST {{baseUrl}}/user
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### User Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### Get User by ID (Assuming ID is 1)
+GET {{baseUrl}}/user/3
+
+### Update User (Assuming ID is 1)
+PUT {{baseUrl}}/user/3
+Content-Type: application/json
+
+{
+  "name": "John Updated",
+  "email": "johnupdated@example.com",
+  "password": "newpassword123"
+}
+
+### Delete User (Assuming ID is 1)
+DELETE {{baseUrl}}/user/2
