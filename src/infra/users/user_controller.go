@@ -1,22 +1,19 @@
-package controllers
+package users
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/eduardo-paes/cashflow/core/users"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-
-	core "github.com/eduardo-paes/cashflow/core/entities"
-	"github.com/eduardo-paes/cashflow/core/ports"
 )
 
 type UserController struct {
-	UseCase core.UserUseCases
+	UseCase users.UserUseCases
 }
 
 // NewUserController returns contract implementation of UserService
-func NewUserController(usecase core.UserUseCases) core.UserService {
+func NewUserController(usecase users.UserUseCases) users.UserService {
 	return &UserController{
 		UseCase: usecase,
 	}
@@ -27,29 +24,27 @@ func NewUserController(usecase core.UserUseCases) core.UserService {
 // @Tags			auth
 // @Accept			json
 // @Produce		json
-// @Param			request	body		ports.AuthInput	true	"User data"
-// @Success		200		{object}	ports.AuthOutput
+// @Param			request	body		users.AuthInput	true	"User data"
+// @Success		200		{object}	users.AuthOutput
 // @Failure		400		{string}	string
 // @Failure		500		{string}	string
-// @Router			/login [post]
-func (s *UserController) Login(response http.ResponseWriter, request *http.Request) {
-	authRequest, err := ports.FromJSONAuthInput(request.Body)
+// @Router			/auth/login [post]
+func (s *UserController) Login(c *gin.Context) {
+	authRequest, err := users.FromJSONAuthInput(c.Request.Body)
 
 	if err != nil {
-		response.WriteHeader(http.StatusBadRequest)
-		response.Write([]byte(err.Error()))
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	authOutput, err := s.UseCase.Login(authRequest)
 
 	if err != nil {
-		response.WriteHeader(http.StatusBadRequest)
-		response.Write([]byte(err.Error()))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	json.NewEncoder(response).Encode(authOutput)
+	c.JSON(http.StatusOK, authOutput)
 }
 
 // @Summary		Create a new user
@@ -57,29 +52,27 @@ func (s *UserController) Login(response http.ResponseWriter, request *http.Reque
 // @Tags			users
 // @Accept			json
 // @Produce		json
-// @Param			request	body		ports.UserInput	true	"User data"
-// @Success		200		{object}	core.User
+// @Param			request	body		users.UserInput	true	"User data"
+// @Success		200		{object}	users.User
 // @Failure		400		{string}	string
 // @Failure		500		{string}	string
 // @Router			/user [post]
-func (s *UserController) Create(response http.ResponseWriter, request *http.Request) {
-	userRequest, err := ports.FromJSONCreateUser(request.Body)
+func (s *UserController) Create(c *gin.Context) {
+	userRequest, err := users.FromJSONCreateUser(c.Request.Body)
 
 	if err != nil {
-		response.WriteHeader(http.StatusBadRequest)
-		response.Write([]byte(err.Error()))
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	user, err := s.UseCase.Create(userRequest)
 
 	if err != nil {
-		response.WriteHeader(http.StatusBadRequest)
-		response.Write([]byte(err.Error()))
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	json.NewEncoder(response).Encode(fmt.Sprintf("User created created successfully. ID: %v", user.ID))
+	c.JSON(http.StatusOK, fmt.Sprintf("User created created successfully. ID: %v", user.ID))
 }
 
 // @Summary		Delete an user by ID
@@ -88,7 +81,7 @@ func (s *UserController) Create(response http.ResponseWriter, request *http.Requ
 // @Accept			json
 // @Produce		json
 // @Param			id	path		int	true	"User ID"
-// @Success		200	{object}	core.User
+// @Success		200	{object}	users.User
 // @Failure		400	{string}	string
 // @Failure		500	{string}	string
 // @Router			/user/{id} [delete]
@@ -119,10 +112,10 @@ func (s *UserController) Delete(c *gin.Context) {
 // @Tags			users
 // @Accept			json
 // @Produce		json
-// @Param			id		path		int					true	"User ID"
-// @Success		200		{array}		core.User
-// @Failure		400		{string}	string
-// @Failure		500		{string}	string
+// @Param			id	path		int	true	"User ID"
+// @Success		200	{array}		users.User
+// @Failure		400	{string}	string
+// @Failure		500	{string}	string
 // @Router			/user [get]
 func (s *UserController) GetOne(c *gin.Context) {
 	// Extract the "id" parameter from the URL path
@@ -157,9 +150,9 @@ func (s *UserController) GetOne(c *gin.Context) {
 // @Tags			users
 // @Accept			json
 // @Produce		json
-// @Param			id		path		int					true	"User ID"
-// @Param			request	body		ports.UserInput	true	"User data"
-// @Success		200		{object}	core.User
+// @Param			id		path		int				true	"User ID"
+// @Param			request	body		users.UserInput	true	"User data"
+// @Success		200		{object}	users.User
 // @Failure		400		{string}	string
 // @Failure		500		{string}	string
 // @Router			/user/{id} [put]
@@ -176,7 +169,7 @@ func (s *UserController) Update(c *gin.Context) {
 	}
 
 	// Extract the request body
-	var userRequest ports.UserInput
+	var userRequest users.UserInput
 	if err := c.BindJSON(&userRequest); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

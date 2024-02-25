@@ -4,25 +4,27 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"github.com/dgrijalva/jwt-go"
-	core "github.com/eduardo-paes/cashflow/core/entities"
+	core "github.com/eduardo-paes/cashflow/core/users"
 	"time"
 )
 
 type AuthServices struct {
 	secretKey string
+	salt      string
 }
 
 // CustomClaims represents the claims you want to include in the JWT
 type CustomClaims struct {
 	UserID   int64  `json:"user_id"`
-	userName string `json:"username"`
+	UserName string `json:"username"`
 	jwt.StandardClaims
 }
 
 // NewAuthServices returns a new instance of AuthServices.
-func NewAuthServices(jwtKey string) core.AuthService {
+func NewAuthServices(jwtKey string, salt string) core.AuthService {
 	return &AuthServices{
 		secretKey: jwtKey,
+		salt:      salt,
 	}
 }
 
@@ -31,7 +33,7 @@ func (u *AuthServices) GenerateToken(userId int64, userName string) (string, err
 	// Define the claims
 	claims := CustomClaims{
 		UserID:   userId,
-		userName: userName,
+		UserName: userName,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * 24).Unix(), // Set expiration time
 			IssuedAt:  time.Now().Unix(),                     // Set issuance time
@@ -42,7 +44,7 @@ func (u *AuthServices) GenerateToken(userId int64, userName string) (string, err
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Sign the token with a secret key
-	secretKey := []byte("your_secret_key") // Replace with your secret key
+	secretKey := []byte(u.secretKey)
 	tokenString, err := token.SignedString(secretKey)
 	if err != nil {
 		return "", err
@@ -53,11 +55,8 @@ func (u *AuthServices) GenerateToken(userId int64, userName string) (string, err
 
 // HashPassword implements core.AuthService.
 func (u *AuthServices) HashPassword(password string) (string, error) {
-	// Use a constant salt for deterministic results
-	salt := "^5Lk<kbm<t50FR!#G*[JvvMMql/^*%wMp"
-
 	// Concatenate the password and salt
-	combined := password + salt
+	combined := password + u.salt
 
 	// Hash the combined string using SHA-256
 	hash := sha256.New()

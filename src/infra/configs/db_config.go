@@ -1,11 +1,11 @@
-package data
+package configs
 
 import (
 	"fmt"
+	core "github.com/eduardo-paes/cashflow/core/expenses"
+	"github.com/eduardo-paes/cashflow/core/users"
 	"os"
 
-	// Database schema migration library
-	core "github.com/eduardo-paes/cashflow/core/entities"
 	"github.com/spf13/viper"  // Configuration management library
 	"gorm.io/driver/postgres" // Postgres Driver
 	"gorm.io/gorm"            // Database ORM
@@ -32,7 +32,7 @@ func RunMigrations(db *gorm.DB) error {
 	}
 
 	// Automatically create tables for all registered models
-	if err := db.AutoMigrate(&core.User{}); err != nil {
+	if err := db.AutoMigrate(&users.User{}); err != nil {
 		return err
 	}
 

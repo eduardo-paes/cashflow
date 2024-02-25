@@ -1,10 +1,8 @@
-package core
+package expenses
 
 import (
 	"net/http"
 	"time"
-
-	"github.com/eduardo-paes/cashflow/core/ports"
 )
 
 type Expense struct {
@@ -26,15 +24,15 @@ type ExpenseService interface {
 }
 
 type ExpenseUseCases interface {
-	Create(input *ports.ExpenseInput) (*Expense, error)
-	Update(id int64, input *ports.ExpenseInput) (*Expense, error)
+	Create(input *ExpenseInput) (*Expense, error)
+	Update(id int64, input *ExpenseInput) (*Expense, error)
 	Delete(id int64) (*Expense, error)
 	GetOneOrMany(skip int, take int, id ...int64) ([]Expense, error)
 }
 
 type ExpenseRepository interface {
-	Create(input *ports.ExpenseInput) (*Expense, error)
-	Update(id int64, input *ports.ExpenseInput) (*Expense, error)
+	Create(input *ExpenseInput) (*Expense, error)
+	Update(id int64, input *ExpenseInput) (*Expense, error)
 	Delete(id int64) (*Expense, error)
 	GetOneOrMany(skip int, take int, id ...int64) ([]Expense, error)
 }

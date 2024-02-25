@@ -1,0 +1,41 @@
+@baseUrl = http://localhost:3008/api/v1
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2LCJ1c2VybmFtZSI6IkpvaG4gVXBkYXRlZCIsImV4cCI6MTcwODk3NDQ1MCwiaWF0IjoxNzA4ODg4MDUwfQ._wn683o6jxURAUOrt5g71w8fVZ2V12uVQo3W-K2Gyf4
+
+### User Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "eduardo.paes@email.com",
+  "password": "P@ssw0rd123"
+}
+
+### User Creation
+POST {{baseUrl}}/user
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+
+### Get User by ID (Assuming ID is 8)
+GET {{baseUrl}}/user/8
+Authorization: Bearer {{authToken}}
+
+### Update User (Assuming ID is 8)
+PUT {{baseUrl}}/user/8
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "John Updated",
+  "email": "johnupdated@example.com",
+  "password": "newpassword123"
+}
+
+### Delete User (Assuming ID is 8)
+DELETE {{baseUrl}}/user/8
+Authorization: Bearer {{authToken}}

@@ -1,12 +1,11 @@
-package controllers
+package expenses
 
 import (
 	"encoding/json"
+	core "github.com/eduardo-paes/cashflow/core/expenses"
 	"net/http"
 	"strconv"
 
-	core "github.com/eduardo-paes/cashflow/core/entities"
-	"github.com/eduardo-paes/cashflow/core/ports"
 	"github.com/gorilla/mux"
 )
 
@@ -26,13 +25,13 @@ func NewExpenseController(usecase core.ExpenseUseCases) core.ExpenseService {
 // @Tags			expenses
 // @Accept			json
 // @Produce		json
-// @Param			request	body		ports.ExpenseInput	true	"Expense data"
+// @Param			request	body		expenses.ExpenseInput	true	"Expense data"
 // @Success		200		{object}	core.Expense
 // @Failure		400		{string}	string
 // @Failure		500		{string}	string
 // @Router			/expense [post]
 func (s *ExpenseController) Create(response http.ResponseWriter, request *http.Request) {
-	expenseRequest, err := ports.FromJSONCreateExpense(request.Body)
+	expenseRequest, err := core.FromJSONCreateExpense(request.Body)
 
 	if err != nil {
 		response.WriteHeader(http.StatusBadRequest)
@@ -129,8 +128,8 @@ func (s *ExpenseController) GetOneOrMany(response http.ResponseWriter, request *
 // @Tags			expenses
 // @Accept			json
 // @Produce		json
-// @Param			id		path		int					true	"Expense ID"
-// @Param			request	body		ports.ExpenseInput	true	"Expense data"
+// @Param			id		path		int						true	"Expense ID"
+// @Param			request	body		expenses.ExpenseInput	true	"Expense data"
 // @Success		200		{object}	core.Expense
 // @Failure		400		{string}	string
 // @Failure		500		{string}	string
@@ -145,7 +144,7 @@ func (s *ExpenseController) Update(response http.ResponseWriter, request *http.R
 		return
 	}
 
-	expenseRequest, err := ports.FromJSONCreateExpense(request.Body)
+	expenseRequest, err := core.FromJSONCreateExpense(request.Body)
 
 	if err != nil {
 		response.WriteHeader(http.StatusBadRequest)

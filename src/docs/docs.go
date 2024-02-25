@@ -23,6 +23,52 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/login": {
+            "post": {
+                "description": "Login with user credentials",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Login",
+                "parameters": [
+                    {
+                        "description": "User data",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/users.AuthInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/users.AuthOutput"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/expense": {
             "get": {
                 "description": "Get one or multiple expenses based on provided parameters",
@@ -62,7 +108,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/core.Expense"
+                                "$ref": "#/definitions/github_com_eduardo-paes_cashflow_core_expenses.Expense"
                             }
                         }
                     },
@@ -99,7 +145,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ports.ExpenseInput"
+                            "$ref": "#/definitions/expenses.ExpenseInput"
                         }
                     }
                 ],
@@ -107,7 +153,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/core.Expense"
+                            "$ref": "#/definitions/github_com_eduardo-paes_cashflow_core_expenses.Expense"
                         }
                     },
                     "400": {
@@ -152,7 +198,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ports.ExpenseInput"
+                            "$ref": "#/definitions/expenses.ExpenseInput"
                         }
                     }
                 ],
@@ -160,7 +206,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/core.Expense"
+                            "$ref": "#/definitions/github_com_eduardo-paes_cashflow_core_expenses.Expense"
                         }
                     },
                     "400": {
@@ -202,53 +248,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/core.Expense"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/login": {
-            "post": {
-                "description": "Login with user credentials",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Login",
-                "parameters": [
-                    {
-                        "description": "User data",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ports.AuthInput"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ports.AuthOutput"
+                            "$ref": "#/definitions/github_com_eduardo-paes_cashflow_core_expenses.Expense"
                         }
                     },
                     "400": {
@@ -275,7 +275,7 @@ const docTemplate = `{
         },
         "/user": {
             "get": {
-                "description": "Get one or multiple users based on provided parameters",
+                "description": "Get one user",
                 "consumes": [
                     "application/json"
                 ],
@@ -285,25 +285,14 @@ const docTemplate = `{
                 "tags": [
                     "users"
                 ],
-                "summary": "Get one or multiple users",
+                "summary": "Get one user",
                 "parameters": [
                     {
                         "type": "integer",
                         "description": "User ID",
                         "name": "id",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Number of items to skip",
-                        "name": "skip",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Number of items to take",
-                        "name": "take",
-                        "in": "query"
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -312,7 +301,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/core.User"
+                                "$ref": "#/definitions/github_com_eduardo-paes_cashflow_core_users.User"
                             }
                         }
                     },
@@ -349,7 +338,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ports.UserInput"
+                            "$ref": "#/definitions/users.UserInput"
                         }
                     }
                 ],
@@ -357,7 +346,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/core.User"
+                            "$ref": "#/definitions/github_com_eduardo-paes_cashflow_core_users.User"
                         }
                     },
                     "400": {
@@ -402,7 +391,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ports.UserInput"
+                            "$ref": "#/definitions/users.UserInput"
                         }
                     }
                 ],
@@ -410,7 +399,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/core.User"
+                            "$ref": "#/definitions/github_com_eduardo-paes_cashflow_core_users.User"
                         }
                     },
                     "400": {
@@ -452,7 +441,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/core.User"
+                            "$ref": "#/definitions/github_com_eduardo-paes_cashflow_core_users.User"
                         }
                     },
                     "400": {
@@ -472,7 +461,27 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "core.Expense": {
+        "expenses.ExpenseInput": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "integer"
+                }
+            }
+        },
+        "github_com_eduardo-paes_cashflow_core_expenses.Expense": {
             "type": "object",
             "properties": {
                 "amount": {
@@ -501,7 +510,7 @@ const docTemplate = `{
                 }
             }
         },
-        "core.User": {
+        "github_com_eduardo-paes_cashflow_core_users.User": {
             "type": "object",
             "properties": {
                 "createdAt": {
@@ -521,10 +530,13 @@ const docTemplate = `{
                 },
                 "password": {
                     "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
                 }
             }
         },
-        "ports.AuthInput": {
+        "users.AuthInput": {
             "type": "object",
             "properties": {
                 "email": {
@@ -535,7 +547,7 @@ const docTemplate = `{
                 }
             }
         },
-        "ports.AuthOutput": {
+        "users.AuthOutput": {
             "type": "object",
             "properties": {
                 "token": {
@@ -549,27 +561,7 @@ const docTemplate = `{
                 }
             }
         },
-        "ports.ExpenseInput": {
-            "type": "object",
-            "properties": {
-                "amount": {
-                    "type": "number"
-                },
-                "category": {
-                    "type": "string"
-                },
-                "date": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "integer"
-                }
-            }
-        },
-        "ports.UserInput": {
+        "users.UserInput": {
             "type": "object",
             "properties": {
                 "email": {

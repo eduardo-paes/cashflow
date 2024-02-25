@@ -1,4 +1,4 @@
-package middleware
+package configs
 
 import (
 	"net/http"
@@ -20,7 +20,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		tokenString := strings.Split(authorizationHeader, " ")[1]
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			return []byte(viper.GetString("jwt.secret")), nil
+			return []byte(viper.GetString("security.jwtSecret")), nil
 		})
 
 		if err != nil || !token.Valid {

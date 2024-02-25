@@ -1,10 +1,10 @@
-package routes
+package expenses
 
 import (
+	core "github.com/eduardo-paes/cashflow/core/expenses"
 	"net/http"
 	"strconv"
 
-	core "github.com/eduardo-paes/cashflow/core/entities"
 	"github.com/gin-gonic/gin"
 )
 

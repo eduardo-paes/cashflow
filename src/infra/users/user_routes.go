@@ -1,7 +1,7 @@
-package routes
+package users
 
 import (
-	core "github.com/eduardo-paes/cashflow/core/entities"
+	core "github.com/eduardo-paes/cashflow/core/users"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,23 +11,23 @@ func ConfigureUserRoutes(baseRoute *gin.RouterGroup, userController core.UserSer
 	userGroup := baseRoute.Group("/user")
 
 	// POST /user
-	userGroup.POST("", func(c *gin.Context) {
-		userController.Create(c.Writer, c.Request)
+	userGroup.POST("", func(ctx *gin.Context) {
+		userController.Create(ctx)
 	})
 
 	// DELETE /user/:id
-	userGroup.DELETE("/:id", func(c *gin.Context) {
-		userController.Delete(c)
+	userGroup.DELETE("/:id", func(ctx *gin.Context) {
+		userController.Delete(ctx)
 	})
 
 	// GET /users
-	userGroup.GET("/:id", func(c *gin.Context) {
-		userController.GetOne(c)
+	userGroup.GET("/:id", func(ctx *gin.Context) {
+		userController.GetOne(ctx)
 	})
 
 	// PUT /user/:id
-	userGroup.PUT("/:id", func(c *gin.Context) {
-		userController.Update(c)
+	userGroup.PUT("/:id", func(ctx *gin.Context) {
+		userController.Update(ctx)
 	})
 }
 
@@ -37,7 +37,7 @@ func ConfigureAuthRoutes(baseRoute *gin.RouterGroup, userController core.UserSer
 	authGroup := baseRoute.Group("/auth")
 
 	// POST /auth
-	authGroup.POST("/login", func(c *gin.Context) {
-		userController.Login(c.Writer, c.Request)
+	authGroup.POST("/login", func(ctx *gin.Context) {
+		userController.Login(ctx)
 	})
 }

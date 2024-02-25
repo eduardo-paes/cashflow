@@ -1,11 +1,8 @@
-package core
+package users
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 	"time"
-
-	"github.com/eduardo-paes/cashflow/core/ports"
 )
 
 type User struct {
@@ -19,25 +16,25 @@ type User struct {
 }
 
 type UserService interface {
-	Login(response http.ResponseWriter, request *http.Request)
-	Create(response http.ResponseWriter, request *http.Request)
+	Login(context *gin.Context)
+	Create(context *gin.Context)
 	Update(context *gin.Context)
 	Delete(context *gin.Context)
 	GetOne(context *gin.Context)
 }
 
 type UserUseCases interface {
-	Login(input *ports.AuthInput) (*ports.AuthOutput, error)
-	Create(input *ports.UserInput) (*User, error)
-	Update(id int64, input *ports.UserInput) (*User, error)
+	Login(input *AuthInput) (*AuthOutput, error)
+	Create(input *UserInput) (*User, error)
+	Update(id int64, input *UserInput) (*User, error)
 	Delete(id int64) (*User, error)
 	GetOne(id ...int64) (*User, error)
 }
 
 type UserRepository interface {
-	Login(input *ports.AuthInput) (*User, error)
-	Create(input *ports.UserInput) (*User, error)
-	Update(id int64, input *ports.UserInput) (*User, error)
+	Login(input *AuthInput) (*User, error)
+	Create(input *UserInput) (*User, error)
+	Update(id int64, input *UserInput) (*User, error)
 	Delete(id int64) (*User, error)
 	GetOne(id ...int64) (*User, error)
 }

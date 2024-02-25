@@ -2,8 +2,9 @@
   "database": {
     "url": "postgres://postgres:postgres@localhost:5432/cashflow?sslmode=disable"
   },
-  "jwt": {
-    "secret": "sdhaluwhreh;29u[msd/lam"
+  "security": {
+    "passwordSalt": "R3cNu7JLvTSuLB6wMOWlRP380angQD2P",
+    "jwtSecret": "nWFW8Hpr8C2Y3VFaOSam23Tu7cIwYp5y"
   },
   "server": {
     "port": "3008"

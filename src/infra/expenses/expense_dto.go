@@ -1,4 +1,4 @@
-package dtos
+package expenses
 
 import (
 	"time"

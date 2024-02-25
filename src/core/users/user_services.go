@@ -1,17 +1,12 @@
-package services
-
-import (
-	core "github.com/eduardo-paes/cashflow/core/entities"
-	"github.com/eduardo-paes/cashflow/core/ports"
-)
+package users
 
 type UserServices struct {
-	Repository  core.UserRepository
-	AuthService core.AuthService
+	Repository  UserRepository
+	AuthService AuthService
 }
 
 // NewUserService returns contract implementation of UserUseCases
-func NewUserService(repository core.UserRepository, authService core.AuthService) core.UserUseCases {
+func NewUserService(repository UserRepository, authService AuthService) UserUseCases {
 	return &UserServices{
 		Repository:  repository,
 		AuthService: authService,
@@ -19,7 +14,7 @@ func NewUserService(repository core.UserRepository, authService core.AuthService
 }
 
 // Login implements core.UserUseCases.
-func (u *UserServices) Login(auth *ports.AuthInput) (*ports.AuthOutput, error) {
+func (u *UserServices) Login(auth *AuthInput) (*AuthOutput, error) {
 	hashedPassword, err := u.AuthService.HashPassword(auth.Password)
 	if err != nil {
 		return nil, err
@@ -36,7 +31,7 @@ func (u *UserServices) Login(auth *ports.AuthInput) (*ports.AuthOutput, error) {
 		return nil, err
 	}
 
-	authOutput := &ports.AuthOutput{
+	authOutput := &AuthOutput{
 		Token:    token,
 		UserId:   user.ID,
 		UserName: user.Name,
@@ -46,7 +41,7 @@ func (u *UserServices) Login(auth *ports.AuthInput) (*ports.AuthOutput, error) {
 }
 
 // Create implements core.UserUseCases.
-func (u *UserServices) Create(user *ports.UserInput) (*core.User, error) {
+func (u *UserServices) Create(user *UserInput) (*User, error) {
 	hashedPassword, err := u.AuthService.HashPassword(user.Password)
 	if err != nil {
 		return nil, err
@@ -63,7 +58,7 @@ func (u *UserServices) Create(user *ports.UserInput) (*core.User, error) {
 }
 
 // Delete implements core.UserUseCases.
-func (u *UserServices) Delete(id int64) (*core.User, error) {
+func (u *UserServices) Delete(id int64) (*User, error) {
 	userDeleted, err := u.Repository.Delete(id)
 	if err != nil {
 		return nil, err
@@ -73,7 +68,7 @@ func (u *UserServices) Delete(id int64) (*core.User, error) {
 }
 
 // GetOne implements core.UserUseCases.
-func (u *UserServices) GetOne(id ...int64) (*core.User, error) {
+func (u *UserServices) GetOne(id ...int64) (*User, error) {
 	user, err := u.Repository.GetOne(id...)
 	if err != nil {
 		return nil, err
@@ -87,7 +82,7 @@ func (u *UserServices) GetOne(id ...int64) (*core.User, error) {
 }
 
 // Update implements core.UserUseCases.
-func (u *UserServices) Update(id int64, user *ports.UserInput) (*core.User, error) {
+func (u *UserServices) Update(id int64, user *UserInput) (*User, error) {
 	newPassword, err := u.AuthService.HashPassword(user.Password)
 	if err != nil {
 		return nil, err

@@ -1,13 +1,12 @@
 package main
 
 import (
+	"github.com/eduardo-paes/cashflow/infra/configs"
+	"github.com/eduardo-paes/cashflow/infra/expenses"
+	"github.com/eduardo-paes/cashflow/infra/users"
 	"log"
 	"net/http"
 
-	"github.com/eduardo-paes/cashflow/infra/data"
-	"github.com/eduardo-paes/cashflow/infra/http/middleware"
-	"github.com/eduardo-paes/cashflow/infra/http/routes"
-	"github.com/eduardo-paes/cashflow/infra/ioc"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
 	swaggerFiles "github.com/swaggo/files"
@@ -43,16 +42,16 @@ func init() {
 // @name						token
 func main() {
 	// Open database connection
-	conn, dbErr := data.GetConnection()
-	if dbErr != nil {
-		log.Printf("Error opening DB connection: %v", dbErr)
+	conn, err := configs.GetConnection()
+	if err != nil {
+		log.Printf("Error opening DB connection: %v", err)
 		return
 	}
 
 	// Running migrations
-	mgErr := data.RunMigrations(conn)
-	if mgErr != nil {
-		log.Printf("Error running migrations: %v", mgErr)
+	err = configs.RunMigrations(conn)
+	if err != nil {
+		log.Printf("Error running migrations: %v", err)
 		return
 	}
 
@@ -67,8 +66,11 @@ func main() {
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
 
 	// Create controllers
-	expenseController := ioc.ConfigExpenseDI(conn)
-	userController := ioc.ConfigUserDI(conn, viper.GetString("jwt.secret"))
+	expenseController := expenses.ConfigExpenseDI(conn)
+	userController := users.ConfigUserDI(
+		conn,
+		viper.GetString("security.jwtSecret"),
+		viper.GetString("security.passwordSalt"))
 
 	// Home
 	router.GET("", func(ctx *gin.Context) {
@@ -79,14 +81,14 @@ func main() {
 	mainGroup := router.Group("/api/v1")
 
 	// Unauthenticated routes
-	routes.ConfigureUserRoutes(mainGroup, userController)
-	routes.ConfigureAuthRoutes(mainGroup, userController)
+	users.ConfigureAuthRoutes(mainGroup, userController)
 
 	// Authenticated routes
-	mainGroup.Use(middleware.AuthMiddleware())
+	mainGroup.Use(configs.AuthMiddleware())
 	{
 		// Injecting core services
-		routes.ConfigureExpenseRoutes(mainGroup, expenseController)
+		expenses.ConfigureExpenseRoutes(mainGroup, expenseController)
+		users.ConfigureUserRoutes(mainGroup, userController)
 	}
 
 	// Serving API
@@ -97,7 +99,7 @@ func main() {
 		Addr:    ":" + port,
 		Handler: router,
 	}
-	err := server.ListenAndServe()
+	err = server.ListenAndServe()
 	if err != nil {
 		panic(err)
 	}

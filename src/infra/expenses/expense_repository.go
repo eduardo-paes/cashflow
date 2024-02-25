@@ -1,13 +1,10 @@
-package repositories
+package expenses
 
 import (
+	core "github.com/eduardo-paes/cashflow/core/expenses"
 	"time"
 
 	"gorm.io/gorm"
-
-	core "github.com/eduardo-paes/cashflow/core/entities"
-	"github.com/eduardo-paes/cashflow/core/ports"
-	"github.com/eduardo-paes/cashflow/infra/data/dtos"
 )
 
 type ExpenseRepository struct {
@@ -20,8 +17,8 @@ func NewExpenseRepository(db *gorm.DB) core.ExpenseRepository {
 }
 
 // Create implements core.ExpenseRepository.
-func (r *ExpenseRepository) Create(input *ports.ExpenseInput) (*core.Expense, error) {
-	dto := dtos.Expense{
+func (r *ExpenseRepository) Create(input *core.ExpenseInput) (*core.Expense, error) {
+	dto := Expense{
 		Amount:      input.Amount,
 		Category:    input.Category,
 		Description: input.Description,
@@ -40,7 +37,7 @@ func (r *ExpenseRepository) Create(input *ports.ExpenseInput) (*core.Expense, er
 
 // Delete implements core.ExpenseRepository.
 func (r *ExpenseRepository) Delete(id int64) (*core.Expense, error) {
-	var dto dtos.Expense
+	var dto Expense
 
 	// Soft delete the expense by updating the DeletedAt field
 	if err := r.db.Delete(&dto, id).Error; err != nil {
@@ -70,8 +67,8 @@ func (r *ExpenseRepository) GetOneOrMany(skip int, take int, id ...int64) ([]cor
 }
 
 // Update implements core.ExpenseRepository.
-func (r *ExpenseRepository) Update(id int64, input *ports.ExpenseInput) (*core.Expense, error) {
-	var dto dtos.Expense
+func (r *ExpenseRepository) Update(id int64, input *core.ExpenseInput) (*core.Expense, error) {
+	var dto Expense
 	if err := r.db.First(&dto, id).Error; err != nil {
 		return nil, err
 	}
@@ -92,7 +89,7 @@ func (r *ExpenseRepository) Update(id int64, input *ports.ExpenseInput) (*core.E
 }
 
 // ExpenseConvertToEntity converts a dto to an entity
-func ExpenseConvertToEntity(dto dtos.Expense) core.Expense {
+func ExpenseConvertToEntity(dto Expense) core.Expense {
 	var deletedAt *time.Time
 	if dto.DeletedAt != (gorm.DeletedAt{}) {
 		deletedAt = &dto.DeletedAt.Time
@@ -111,13 +108,13 @@ func ExpenseConvertToEntity(dto dtos.Expense) core.Expense {
 }
 
 // ExpenseConvertToDto converts an entity to a dto
-func ExpenseConvertToDto(entity core.Expense) dtos.Expense {
+func ExpenseConvertToDto(entity core.Expense) Expense {
 	var deletedAt gorm.DeletedAt
 	if entity.DeletedAt != nil {
 		deletedAt = gorm.DeletedAt{Time: *entity.DeletedAt}
 	}
 
-	return dtos.Expense{
+	return Expense{
 		ID:          entity.ID,
 		Amount:      entity.Amount,
 		Category:    entity.Category,
