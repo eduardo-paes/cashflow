@@ -22,28 +22,27 @@ func init() {
 	}
 }
 
-// @title CashFlow API
-// @version 1.0
-// @description API for managing expenses in CashFlow application.
-// @termsOfService  https://todefine.com
+//	@title			CashFlow API
+//	@version		1.0
+//	@description	API for managing expenses in CashFlow application.
 
-// @contact.name   Eduardo Paes
-// @contact.url    https://twitter.com/edpaes
-// @contact.email  eduardo-paes@outlook.com
+//	@contact.name	Eduardo Paes
+//	@contact.url	https://twitter.com/edpaes
+//	@contact.email	eduardo-paes@outlook.com
 
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:3008
-// @basePath /api/v1
-// @schemes http
-// @security BasicAuth
-// @security BearerToken
-// @securityDefinitions.apiKey JWT
-// @in header
-// @name token
+// @host						localhost:3008
+// @basePath					/api/v1
+// @schemes					http
+// @security					BasicAuth
+// @security					BearerToken
+// @securityDefinitions.apiKey	JWT
+// @in							header
+// @name						token
 func main() {
-	// Openning database connection
+	// Open database connection
 	conn, dbErr := data.GetConnection()
 	if dbErr != nil {
 		log.Printf("Error opening DB connection: %v", dbErr)
@@ -67,18 +66,27 @@ func main() {
 	swaggerURL := ginSwagger.URL("/docs/swagger.json")
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, swaggerURL))
 
+	// Create controllers
+	expenseController := ioc.ConfigExpenseDI(conn)
+	userController := ioc.ConfigUserDI(conn, viper.GetString("jwt.secret"))
+
 	// Home
 	router.GET("", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, "CashFlow Restful API, v1")
 	})
 
 	// Authenticated routes
-	authGroup := router.Group("/api/v1")
-	authGroup.Use(middleware.AuthMiddleware())
+	mainGroup := router.Group("/api/v1")
+
+	// Unauthenticated routes
+	routes.ConfigureUserRoutes(mainGroup, userController)
+	routes.ConfigureAuthRoutes(mainGroup, userController)
+
+	// Authenticated routes
+	mainGroup.Use(middleware.AuthMiddleware())
 	{
 		// Injecting core services
-		expenseController := ioc.ConfigExpenseDI(conn)
-		routes.ConfigureExpenseRoutes(authGroup, expenseController)
+		routes.ConfigureExpenseRoutes(mainGroup, expenseController)
 	}
 
 	// Serving API

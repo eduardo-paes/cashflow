@@ -1,4 +1,4 @@
-package expense_controller
+package controllers
 
 import (
 	"encoding/json"
@@ -10,28 +10,28 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type Service struct {
+type ExpenseController struct {
 	UseCase core.ExpenseUseCases
 }
 
-// New returns contract implementation of ExpenseService
-func New(usecase core.ExpenseUseCases) core.ExpenseService {
-	return &Service{
+// NewExpenseController returns contract implementation of ExpenseService
+func NewExpenseController(usecase core.ExpenseUseCases) core.ExpenseService {
+	return &ExpenseController{
 		UseCase: usecase,
 	}
 }
 
-// @Summary Create a new expense
-// @Description Create a new expense
-// @Tags expenses
-// @Accept json
-// @Produce json
-// @Param request body ports.ExpenseInput true "Expense data"
-// @Success 200 {object} core.Expense
-// @Failure 400 {string} string
-// @Failure 500 {string} string
-// @Router /expense [post]
-func (s *Service) Create(response http.ResponseWriter, request *http.Request) {
+// @Summary		Create a new expense
+// @Description	Create a new expense
+// @Tags			expenses
+// @Accept			json
+// @Produce		json
+// @Param			request	body		ports.ExpenseInput	true	"Expense data"
+// @Success		200		{object}	core.Expense
+// @Failure		400		{string}	string
+// @Failure		500		{string}	string
+// @Router			/expense [post]
+func (s *ExpenseController) Create(response http.ResponseWriter, request *http.Request) {
 	expenseRequest, err := ports.FromJSONCreateExpense(request.Body)
 
 	if err != nil {
@@ -51,17 +51,17 @@ func (s *Service) Create(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(expense)
 }
 
-// @Summary Delete an expense by ID
-// @Description Delete an expense by ID
-// @Tags expenses
-// @Accept json
-// @Produce json
-// @Param id path int true "Expense ID"
-// @Success 200 {object} core.Expense
-// @Failure 400 {string} string
-// @Failure 500 {string} string
-// @Router /expense/{id} [delete]
-func (s *Service) Delete(response http.ResponseWriter, request *http.Request) {
+// @Summary		Delete an expense by ID
+// @Description	Delete an expense by ID
+// @Tags			expenses
+// @Accept			json
+// @Produce		json
+// @Param			id	path		int	true	"Expense ID"
+// @Success		200	{object}	core.Expense
+// @Failure		400	{string}	string
+// @Failure		500	{string}	string
+// @Router			/expense/{id} [delete]
+func (s *ExpenseController) Delete(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
 
@@ -82,19 +82,19 @@ func (s *Service) Delete(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(expense)
 }
 
-// @Summary Get one or multiple expenses
-// @Description Get one or multiple expenses based on provided parameters
-// @Tags expenses
-// @Accept json
-// @Produce json
-// @Param id query int false "Expense ID"
-// @Param skip query int false "Number of items to skip"
-// @Param take query int false "Number of items to take"
-// @Success 200 {array} core.Expense
-// @Failure 400 {string} string
-// @Failure 500 {string} string
-// @Router /expense [get]
-func (s *Service) GetOneOrMany(response http.ResponseWriter, request *http.Request) {
+// @Summary		Get one or multiple expenses
+// @Description	Get one or multiple expenses based on provided parameters
+// @Tags			expenses
+// @Accept			json
+// @Produce		json
+// @Param			id		query		int	false	"Expense ID"
+// @Param			skip	query		int	false	"Number of items to skip"
+// @Param			take	query		int	false	"Number of items to take"
+// @Success		200		{array}		core.Expense
+// @Failure		400		{string}	string
+// @Failure		500		{string}	string
+// @Router			/expense [get]
+func (s *ExpenseController) GetOneOrMany(response http.ResponseWriter, request *http.Request) {
 	queryValues := request.URL.Query()
 	id, idErr := strconv.ParseInt(queryValues.Get("id"), 10, 64)
 	skip, _ := strconv.Atoi(queryValues.Get("skip"))
@@ -124,18 +124,18 @@ func (s *Service) GetOneOrMany(response http.ResponseWriter, request *http.Reque
 	json.NewEncoder(response).Encode(expenses)
 }
 
-// @Summary Update an expense by ID
-// @Description Update an expense by ID
-// @Tags expenses
-// @Accept json
-// @Produce json
-// @Param id path int true "Expense ID"
-// @Param request body ports.ExpenseInput true "Expense data"
-// @Success 200 {object} core.Expense
-// @Failure 400 {string} string
-// @Failure 500 {string} string
-// @Router /expense/{id} [put]
-func (s *Service) Update(response http.ResponseWriter, request *http.Request) {
+// @Summary		Update an expense by ID
+// @Description	Update an expense by ID
+// @Tags			expenses
+// @Accept			json
+// @Produce		json
+// @Param			id		path		int					true	"Expense ID"
+// @Param			request	body		ports.ExpenseInput	true	"Expense data"
+// @Success		200		{object}	core.Expense
+// @Failure		400		{string}	string
+// @Failure		500		{string}	string
+// @Router			/expense/{id} [put]
+func (s *ExpenseController) Update(response http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
 

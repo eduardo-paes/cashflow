@@ -1,23 +1,23 @@
-package expense_usecases
+package services
 
 import (
 	core "github.com/eduardo-paes/cashflow/core/entities"
 	"github.com/eduardo-paes/cashflow/core/ports"
 )
 
-type UseCase struct {
+type ExpenseServices struct {
 	Repository core.ExpenseRepository
 }
 
 // New returns contract implementation of ExpenseUseCases
-func New(repository core.ExpenseRepository) core.ExpenseUseCases {
-	return &UseCase{
+func NewExpenseService(repository core.ExpenseRepository) core.ExpenseUseCases {
+	return &ExpenseServices{
 		Repository: repository,
 	}
 }
 
 // Create implements core.ExpenseUseCases.
-func (u *UseCase) Create(expense *ports.ExpenseInput) (*core.Expense, error) {
+func (u *ExpenseServices) Create(expense *ports.ExpenseInput) (*core.Expense, error) {
 	newExpense, err := u.Repository.Create(expense)
 
 	if err != nil {
@@ -28,7 +28,7 @@ func (u *UseCase) Create(expense *ports.ExpenseInput) (*core.Expense, error) {
 }
 
 // Delete implements core.ExpenseUseCases.
-func (u *UseCase) Delete(id int64) (*core.Expense, error) {
+func (u *ExpenseServices) Delete(id int64) (*core.Expense, error) {
 	expenseDeleted, err := u.Repository.Delete(id)
 
 	if err != nil {
@@ -39,7 +39,7 @@ func (u *UseCase) Delete(id int64) (*core.Expense, error) {
 }
 
 // GetOneOrMany implements core.ExpenseUseCases.
-func (u *UseCase) GetOneOrMany(skip int, take int, id ...int64) ([]core.Expense, error) {
+func (u *ExpenseServices) GetOneOrMany(skip int, take int, id ...int64) ([]core.Expense, error) {
 	expenses, err := u.Repository.GetOneOrMany(skip, take, id...)
 
 	if err != nil {
@@ -50,7 +50,7 @@ func (u *UseCase) GetOneOrMany(skip int, take int, id ...int64) ([]core.Expense,
 }
 
 // Update implements core.ExpenseUseCases.
-func (u *UseCase) Update(id int64, expense *ports.ExpenseInput) (*core.Expense, error) {
+func (u *ExpenseServices) Update(id int64, expense *ports.ExpenseInput) (*core.Expense, error) {
 	expenseDeleted, err := u.Repository.Update(id, expense)
 
 	if err != nil {

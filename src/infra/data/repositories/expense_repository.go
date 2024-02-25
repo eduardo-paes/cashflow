@@ -1,4 +1,4 @@
-package expense_repository
+package repositories
 
 import (
 	"time"
@@ -10,17 +10,17 @@ import (
 	"github.com/eduardo-paes/cashflow/infra/data/dtos"
 )
 
-type Repository struct {
+type ExpenseRepository struct {
 	db *gorm.DB
 }
 
-// New returns contract implementation of ExpenseRepository
-func New(db *gorm.DB) core.ExpenseRepository {
-	return &Repository{db: db}
+// NewExpenseRepository returns contract implementation of ExpenseRepository
+func NewExpenseRepository(db *gorm.DB) core.ExpenseRepository {
+	return &ExpenseRepository{db: db}
 }
 
 // Create implements core.ExpenseRepository.
-func (r *Repository) Create(input *ports.ExpenseInput) (*core.Expense, error) {
+func (r *ExpenseRepository) Create(input *ports.ExpenseInput) (*core.Expense, error) {
 	dto := dtos.Expense{
 		Amount:      input.Amount,
 		Category:    input.Category,
@@ -34,12 +34,12 @@ func (r *Repository) Create(input *ports.ExpenseInput) (*core.Expense, error) {
 		return nil, err
 	}
 
-	expense := ConvertToEntity(dto)
+	expense := ExpenseConvertToEntity(dto)
 	return &expense, nil
 }
 
 // Delete implements core.ExpenseRepository.
-func (r *Repository) Delete(id int64) (*core.Expense, error) {
+func (r *ExpenseRepository) Delete(id int64) (*core.Expense, error) {
 	var dto dtos.Expense
 
 	// Soft delete the expense by updating the DeletedAt field
@@ -47,12 +47,12 @@ func (r *Repository) Delete(id int64) (*core.Expense, error) {
 		return nil, err
 	}
 
-	expense := ConvertToEntity(dto)
+	expense := ExpenseConvertToEntity(dto)
 	return &expense, nil
 }
 
 // GetOneOrMany implements core.ExpenseRepository.
-func (r *Repository) GetOneOrMany(skip int, take int, id ...int64) ([]core.Expense, error) {
+func (r *ExpenseRepository) GetOneOrMany(skip int, take int, id ...int64) ([]core.Expense, error) {
 	var expenses []core.Expense
 	query := r.db
 
@@ -70,7 +70,7 @@ func (r *Repository) GetOneOrMany(skip int, take int, id ...int64) ([]core.Expen
 }
 
 // Update implements core.ExpenseRepository.
-func (r *Repository) Update(id int64, input *ports.ExpenseInput) (*core.Expense, error) {
+func (r *ExpenseRepository) Update(id int64, input *ports.ExpenseInput) (*core.Expense, error) {
 	var dto dtos.Expense
 	if err := r.db.First(&dto, id).Error; err != nil {
 		return nil, err
@@ -86,12 +86,13 @@ func (r *Repository) Update(id int64, input *ports.ExpenseInput) (*core.Expense,
 		return nil, err
 	}
 
-	expense := ConvertToEntity(dto)
+	expense := ExpenseConvertToEntity(dto)
 
 	return &expense, nil
 }
 
-func ConvertToEntity(dto dtos.Expense) core.Expense {
+// ExpenseConvertToEntity converts a dto to an entity
+func ExpenseConvertToEntity(dto dtos.Expense) core.Expense {
 	var deletedAt *time.Time
 	if dto.DeletedAt != (gorm.DeletedAt{}) {
 		deletedAt = &dto.DeletedAt.Time
@@ -109,7 +110,8 @@ func ConvertToEntity(dto dtos.Expense) core.Expense {
 	}
 }
 
-func ConvertToDto(entity core.Expense) dtos.Expense {
+// ExpenseConvertToDto converts an entity to a dto
+func ExpenseConvertToDto(entity core.Expense) dtos.Expense {
 	var deletedAt gorm.DeletedAt
 	if entity.DeletedAt != nil {
 		deletedAt = gorm.DeletedAt{Time: *entity.DeletedAt}

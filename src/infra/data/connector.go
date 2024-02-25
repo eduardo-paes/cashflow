@@ -31,5 +31,10 @@ func RunMigrations(db *gorm.DB) error {
 		return err
 	}
 
+	// Automatically create tables for all registered models
+	if err := db.AutoMigrate(&core.User{}); err != nil {
+		return err
+	}
+
 	return nil
 }
